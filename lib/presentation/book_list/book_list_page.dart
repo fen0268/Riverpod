@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
+import '../../domain/book.dart';
 import '../edit_book/edit_book_page.dart';
 import 'book_list_model.dart';
 
@@ -39,6 +40,14 @@ class BookListPage extends ConsumerWidget {
                           label: '編集',
                           backgroundColor: Colors.black54,
                         ),
+                        SlidableAction(
+                          onPressed: (BuildContext context) async {
+                            await showConfirmDialog(context, bookInfo, book);
+                          },
+                          icon: Icons.delete,
+                          label: '削除',
+                          backgroundColor: Colors.red,
+                        ),
                       ],
                     ),
                     child: ListTile(
@@ -72,5 +81,33 @@ class BookListPage extends ConsumerWidget {
         },
       ),
     );
+  }
+
+  Future showConfirmDialog(
+      BuildContext context, Book bookInfo, BookListModel book) {
+    return showDialog(
+        context: context,
+        builder: (_) {
+          return AlertDialog(
+            title: const Text('消すのか？'),
+            content: const Text('本当にいいのか？'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(_);
+                },
+                child: const Text('いいえ'),
+              ),
+              TextButton(
+                onPressed: () {
+                  book.delete(bookInfo);
+                  book.fetchBookList();
+                  Navigator.pop(_);
+                },
+                child: const Text('はい'),
+              ),
+            ],
+          );
+        });
   }
 }
