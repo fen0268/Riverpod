@@ -1,7 +1,9 @@
 import 'package:book_list_riverpod_sample_app/presentation/add_book/add_book_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
+import '../edit_book/edit_book_page.dart';
 import 'book_list_model.dart';
 
 class BookListPage extends ConsumerWidget {
@@ -20,9 +22,29 @@ class BookListPage extends ConsumerWidget {
             }
             final List<Widget> widgets = book.books!
                 .map(
-                  (book) => ListTile(
-                    title: Text(book.title),
-                    subtitle: Text(book.author),
+                  (bookInfo) => Slidable(
+                    endActionPane: ActionPane(
+                      motion: const ScrollMotion(),
+                      children: [
+                        SlidableAction(
+                          onPressed: (BuildContext context) async {
+                            await Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => EditBookPage(bookInfo),
+                              ),
+                            );
+                            book.fetchBookList();
+                          },
+                          icon: Icons.edit,
+                          label: '編集',
+                          backgroundColor: Colors.black54,
+                        ),
+                      ],
+                    ),
+                    child: ListTile(
+                      title: Text(bookInfo.title),
+                      subtitle: Text(bookInfo.author),
+                    ),
                   ),
                 )
                 .toList();
