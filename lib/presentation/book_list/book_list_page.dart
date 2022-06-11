@@ -1,3 +1,4 @@
+import 'package:book_list_riverpod_sample_app/presentation/add_book/add_book_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -8,31 +9,45 @@ class BookListPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final book = ref.read(bookProvider);
+    final book = ref.watch(bookProvider);
     return Scaffold(
       appBar: AppBar(),
-      body: Center(child: Consumer(
+      body: Center(
+        child: Consumer(
+          builder: (context, ref, child) {
+            if (book.books == null) {
+              return const CircularProgressIndicator();
+            }
+            final List<Widget> widgets = book.books!
+                .map(
+                  (book) => ListTile(
+                    title: Text(book.title),
+                    subtitle: Text(book.author),
+                  ),
+                )
+                .toList();
+            return ListView(
+              children: widgets,
+            );
+          },
+        ),
+      ),
+      floatingActionButton: Consumer(
         builder: (context, ref, child) {
-          if (book.books == null) {
-            return const CircularProgressIndicator();
-          }
-          final List<Widget> widgets = book.books!
-              .map(
-                (book) => ListTile(
-                  title: Text(book.title),
-                  subtitle: Text(book.author),
+          return FloatingActionButton(
+            onPressed: () async {
+              await Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const AddBookPage(),
+                  fullscreenDialog: true,
                 ),
-              )
-              .toList();
-          return ListView(
-            children: widgets,
+              );
+              book.fetchBookList();
+            },
+            tooltip: 'Increment',
+            child: const Icon(Icons.add),
           );
         },
-      )),
-      floatingActionButton: const FloatingActionButton(
-        onPressed: null,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
       ),
     );
   }
