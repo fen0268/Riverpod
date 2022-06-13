@@ -55,7 +55,7 @@ class EditBookPage extends ConsumerWidget {
                           }
                         : null,
                     child: const Text('本を編集'),
-                  )
+                  ),
                 ],
               ),
             );

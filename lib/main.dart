@@ -7,9 +7,11 @@ import 'presentation/book_list/book_list_page.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(const ProviderScope(
-    child: MyApp(),
-  ));
+  runApp(
+    const ProviderScope(
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

@@ -4,8 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../domain/book.dart';
 
-final editBookProvider =
-    ChangeNotifierProvider.family((ref, Book book) => EditBookModel(book));
+final editBookProvider = ChangeNotifierProvider.family(
+  (ref, Book book) => EditBookModel(book),
+);
 
 class EditBookModel extends ChangeNotifier {
   EditBookModel(this.book) {
